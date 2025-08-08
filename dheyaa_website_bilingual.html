@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html x-data="site()" :lang="lang" :dir="lang==='ar' ? 'rtl' : 'ltr'" :class="{ 'dark': theme==='dark' }">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title x-text="lang==='ar' ? 'ضياء الخفاجي | خبير التنظيم المالي والرقابة المصرفية' : 'Dheyaa Alkhafaji | Financial Regulation & Banking Supervision Expert'">Dheyaa Alkhafaji | Financial Regulation & Banking Supervision Expert</title>
+  <meta name="description" :content="lang==='ar' ? 'ضياء الخفاجي — مرشح دكتوراه في جامعة بورنموث. خبير في البنوك المركزية والتنظيم المالي والرقابة المصرفية.' : 'Dheyaa Alkhafaji — PhD Candidate at Bournemouth University. Expert in central banking, financial regulation, and banking supervision.'"/>
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Inter for English + Cairo for Arabic -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { 
+            inter: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            cairo: ['Cairo', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif']
+          },
+          colors: {
+            primary: {
+              50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe', 300: '#a5b4fc',
+              400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 800: '#3730a3', 900: '#312e81'
+            }
+          },
+          boxShadow: { soft: '0 10px 30px -12px rgb(2 6 23 / .35)' }
+        }
+      }
+    }
+  </script>
+
+  <!-- Alpine.js -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <style>
+    body { font-family: var(--font-family, 'Inter'), sans-serif; scroll-behavior: smooth; }
+    .noise { background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22160%22 height=%22160%22 viewBox=%220 0 160 160%22><filter id=%22n%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%222%22 stitchTiles=%22stitch%22/></filter><rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22 opacity=%220.035%22/></svg>'); }
+    [x-cloak] { display: none !important; }
+    /* Make Arabic use Cairo font */
+    html[dir="rtl"] body { --font-family: 'Cairo'; }
+    /* Swap some directional utilities when in RTL */
+    html[dir="rtl"] .rtl-left-auto { left: auto; right: 0; }
+    html[dir="rtl"] .rtl-text-start { text-align: right; }
+    html[dir="ltr"] .rtl-text-start { text-align: left; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100">
+  <a href="#home" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[9999] bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 py-2 rounded shadow" x-text="t('skip')">Skip to content</a>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-white/60 bg-white/90 dark:bg-slate-900/80 border-b border-slate-200/70 dark:border-slate-800" x-data="nav()">
+    <nav class="container mx-auto px-6 py-4">
+      <div class="flex items-center justify-between">
+        <a href="#home" class="flex items-center gap-3 group">
+          <div class="h-9 w-9 rounded-xl bg-primary-600/10 grid place-content-center text-primary-600 group-hover:scale-105 transition">
+            <span class="font-bold">DA</span>
+          </div>
+          <div>
+            <p class="font-semibold leading-tight" x-text="t('name')">Dheyaa Alkhafaji</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400" x-text="t('tagline')">Financial Regulation & Supervision</p>
+          </div>
+        </a>
+
+        <div class="flex items-center gap-2 md:gap-6">
+          <!-- Language switcher -->
+          <div class="flex items-center gap-1 text-sm">
+            <button @click="setLang('en')" :class="lang==='en' ? 'font-semibold' : 'opacity-70'" class="px-2 py-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Switch to English">EN</button>
+            <span class="opacity-40">|</span>
+            <button @click="setLang('ar')" :class="lang==='ar' ? 'font-semibold' : 'opacity-70'" class="px-2 py-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="التبديل إلى العربية">AR</button>
+          </div>
+
+          <button @click="toggleTheme" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800" :aria-label="t('toggleTheme')">
+            <svg x-show="theme==='light'" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm0 4a1 1 0 0 1-1-1v-1a1 1 0 1 1 2 0v1a1 1 0 0 1-1 1Zm0-18a1 1 0 0 1-1-1V2a1 1 0 1 1 2 0v1a1 1 0 0 1-1 1Zm10 9h-1a1 1 0 1 1 0-2h1a1 1 0 1 1 0 2ZM3 13H2a1 1 0 1 1 0-2h1a1 1 0 1 1 0 2Zm15.657 6.243a1 1 0 0 1-1.414-1.414l.707-.707a1 1 0 0 1 1.414 1.414l-.707.707ZM6.05 6.05a1 1 0 1 1-1.414-1.414l.707-.707A1 1 0 1 1 6.757 5.343l-.707.707Zm12.727-1.414a1 1 0 1 1 1.414 1.414l-.707.707A1 1 0 0 1 18.07 4.636ZM5.343 19.364a1 1 0 0 1-1.414-1.414l.707-.707A1 1 0 1 1 6.05 18.657l-.707.707Z"/></svg>
+            <svg x-show="theme==='dark'" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M21.752 15.002A9 9 0 1 1 12.998 2.25a1 1 0 0 1 1.164 1.279 7 7 0 0 0 8.309 9.14 1 1 0 0 1 1.281 1.333Z"/></svg>
+          </button>
+
+          <button @click="open = !open" class="md:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800" :aria-label="t('openMenu')">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
+          </button>
+
+          <ul class="hidden md:flex items-center gap-6 font-medium">
+            <li><a :class="linkClass('home')" href="#home" x-text="t('nav.home')">Home</a></li>
+            <li><a :class="linkClass('about')" href="#about" x-text="t('nav.about')">About</a></li>
+            <li><a :class="linkClass('services')" href="#services" x-text="t('nav.services')">Services</a></li>
+            <li><a :class="linkClass('publications')" href="#publications" x-text="t('nav.publications')">Publications</a></li>
+            <li><a :class="linkClass('blog')" href="#blog" x-text="t('nav.blog')">Blog</a></li>
+            <li><a href="#contact" class="inline-flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-full shadow-soft hover:bg-primary-700 transition" x-text="t('nav.contact')">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Mobile -->
+      <div x-show="open" x-transition @click.away="open=false" class="md:hidden mt-4 space-y-2">
+        <a @click="open=false" class="block px-4 py-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800" href="#home" x-text="t('nav.home')">Home</a>
+        <a @click="open=false" class="block px-4 py-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800" href="#about" x-text="t('nav.about')">About</a>
+        <a @click="open=false" class="block px-4 py-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800" href="#services" x-text="t('nav.services')">Services</a>
+        <a @click="open=false" class="block px-4 py-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800" href="#publications" x-text="t('nav.publications')">Publications</a>
+        <a @click="open=false" class="block px-4 py-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800" href="#blog" x-text="t('nav.blog')">Blog</a>
+        <a @click="open=false" class="block px-4 py-2 rounded bg-primary-600 text-white" href="#contact" x-text="t('nav.contact')">Contact</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="home">
+    <!-- Hero -->
+    <section class="relative overflow-hidden isolate">
+      <div class="absolute inset-0 -z-10 bg-gradient-to-b from-primary-50 via-white to-white dark:from-slate-900 dark:via-slate-900 dark:to-slate-950 noise"></div>
+      <div class="container mx-auto px-6 py-20 md:py-28">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <h1 class="text-4xl md:text-5xl font-bold tracking-tight rtl-text-start" x-html="t('hero.title')">Expertise in <span class='text-primary-600'>Central Banking</span> &amp; Financial Regulation</h1>
+            <p class="mt-5 text-lg text-slate-600 dark:text-slate-300 max-w-prose rtl-text-start" x-text="t('hero.subtitle')">PhD Candidate at Bournemouth University with over a decade in banking supervision. I bridge academic rigour with practical policy design to help institutions make resilient decisions.</p>
+            <div class="mt-8 flex flex-wrap gap-3">
+              <a href="#contact" class="inline-flex items-center gap-2 bg-primary-600 text-white px-5 py-3 rounded-full shadow-soft hover:bg-primary-700" x-text="t('hero.cta')">Get in touch</a>
+              <a href="#services" class="inline-flex items-center gap-2 px-5 py-3 rounded-full ring-1 ring-slate-300 dark:ring-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800" x-text="t('hero.secondary')">View services</a>
+            </div>
+            <div class="mt-10 grid grid-cols-3 gap-6 text-center">
+              <div class="rounded-xl border border-slate-200 dark:border-slate-800 p-4">
+                <p class="text-3xl font-bold"><span x-text="t('hero.stat1.value')">10+</span><span class="text-primary-600" x-text="t('hero.stat1.suffix')">y</span></p>
+                <p class="text-xs text-slate-500" x-text="t('hero.stat1.label')">Supervision experience</p>
+              </div>
+              <div class="rounded-xl border border-slate-200 dark:border-slate-800 p-4">
+                <p class="text-3xl font-bold" x-text="t('hero.stat2.value')">GCC &amp; Iraq</p>
+                <p class="text-xs text-slate-500" x-text="t('hero.stat2.label')">Regional focus</p>
+              </div>
+              <div class="rounded-xl border border-slate-200 dark:border-slate-800 p-4">
+                <p class="text-3xl font-bold" x-text="t('hero.stat3.value')">PhD</p>
+                <p class="text-xs text-slate-500" x-text="t('hero.stat3.label')">Monetary policy</p>
+              </div>
+            </div>
+          </div>
+          <div class="relative">
+            <img src="https://placehold.co/800x700/0b1020/ffffff?text=Dheyaa+Alkhafaji" :alt="t('hero.imageAlt')" class="rounded-2xl w-full h-auto shadow-soft" loading="lazy" />
+            <div class="absolute -bottom-6 rtl-left-auto -left-6 bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-soft border border-slate-200 dark:border-slate-800">
+              <p class="text-sm text-slate-600 dark:text-slate-300"><span x-text="t('hero.note')"></span></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trust bar -->
+        <div class="mt-16 opacity-80">
+          <p class="text-center text-sm text-slate-500" x-text="t('trust.title')">Worked with / presented at</p>
+          <div class="mt-4 grid grid-cols-2 md:grid-cols-5 gap-6 items-center grayscale">
+            <img class="mx-auto h-8" loading="lazy" src="https://placehold.co/140x32?text=IMF" alt="IMF" />
+            <img class="mx-auto h-8" loading="lazy" src="https://placehold.co/140x32?text=World+Bank" alt="World Bank" />
+            <img class="mx-auto h-8" loading="lazy" src="https://placehold.co/140x32?text=BIS" alt="BIS" />
+            <img class="mx-auto h-8" loading="lazy" src="https://placehold.co/140x32?text=BU" alt="Bournemouth University" />
+            <img class="mx-auto h-8" loading="lazy" src="https://placehold.co/140x32?text=MoF" alt="Ministry of Finance" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="py-20">
+      <div class="container mx-auto px-6">
+        <div class="max-w-3xl">
+          <h2 class="text-3xl md:text-4xl font-bold" x-text="t('about.title')">About me</h2>
+          <p class="mt-4 text-slate-600 dark:text-slate-300" x-text="t('about.body')">I am a PhD candidate ...</p>
+        </div>
+
+        <div class="mt-10 grid md:grid-cols-3 gap-8">
+          <div class="rounded-2xl p-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+            <h3 class="font-semibold" x-text="t('about.focus')">Focus areas</h3>
+            <ul class="mt-3 text-sm text-slate-600 dark:text-slate-300 space-y-2 list-disc list-inside">
+              <li x-text="t('about.focus1')">Banking supervision & Basel standards</li>
+              <li x-text="t('about.focus2')">Central bank balance sheets (MF-BVAR)</li>
+              <li x-text="t('about.focus3')">Oil-price shocks & fiscal-monetary interplay</li>
+            </ul>
+          </div>
+          <div class="rounded-2xl p-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+            <h3 class="font-semibold" x-text="t('about.methods')">Methods</h3>
+            <ul class="mt-3 text-sm text-slate-600 dark:text-slate-300 space-y-2 list-disc list-inside">
+              <li x-text="t('about.methods1')">Mixed-frequency BVAR & sign restrictions</li>
+              <li x-text="t('about.methods2')">Panel data (Stata/R/MATLAB)</li>
+              <li x-text="t('about.methods3')">Policy case studies & scenario analysis</li>
+            </ul>
+          </div>
+          <div class="rounded-2xl p-6 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+            <h3 class="font-semibold" x-text="t('about.current')">Currently</h3>
+            <p class="mt-3 text-sm text-slate-600 dark:text-slate-300" x-text="t('about.currentBody')">Advising on Basel III implementation ...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services" class="py-20 bg-slate-50 dark:bg-slate-950/50">
+      <div class="container mx-auto px-6">
+        <div class="text-center max-w-2xl mx-auto">
+          <h2 class="text-3xl md:text-4xl font-bold" x-text="t('services.title')">Consultancy & Training</h2>
+          <p class="mt-3 text-slate-600 dark:text-slate-300" x-text="t('services.subtitle')">Practical, evidence-based support for regulators, banks, and ministries.</p>
+        </div>
+
+        <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <!-- Card -->
+          <article class="group rounded-2xl p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:shadow-soft transition">
+            <div class="flex items-center justify-between">
+              <h3 class="font-semibold" x-text="t('services.card1.title')">Expert Consultancy</h3>
+              <span class="text-xs px-2 py-1 rounded-full bg-primary-600/10 text-primary-700" x-text="t('services.card1.badge')">Advisory</span>
+            </div>
+            <p class="mt-3 text-sm text-slate-600 dark:text-slate-300" x-text="t('services.card1.body')">Strategic advice on regulation...</p>
+          </article>
+
+          <article class="group rounded-2xl p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:shadow-soft transition">
+            <div class="flex items-center justify-between">
+              <h3 class="font-semibold" x-text="t('services.card2.title')">Customized Training</h3>
+              <span class="text-xs px-2 py-1 rounded-full bg-primary-600/10 text-primary-700" x-text="t('services.card2.badge')">Workshops</span>
+            </div>
+            <p class="mt-3 text-sm text-slate-600 dark:text-slate-300" x-text="t('services.card2.body')">Design and delivery...</p>
+          </article>
+
+          <article class="group rounded-2xl p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:shadow-soft transition">
+            <div class="flex items-center justify-between">
+              <h3 class="font-semibold" x-text="t('services.card3.title')">Research Collaboration</h3>
+              <span class="text-xs px-2 py-1 rounded-full bg-primary-600/10 text-primary-700" x-text="t('services.card3.badge')">Academic</span>
+            </div>
+            <p class="mt-3 text-sm text-slate-600 dark:text-slate-300" x-text="t('services.card3.body')">Partnering on projects...</p>
+          </article>
+        </div>
+
+        <div class="mt-10 text-center">
+          <a href="#contact" class="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-primary-600 text-white hover:bg-primary-700 shadow-soft" x-text="t('services.cta')">Request a proposal</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Publications -->
+    <section id="publications" class="py-20">
+      <div class="container mx-auto px-6">
+        <div class="text-center max-w-2xl mx-auto">
+          <h2 class="text-3xl md:text-4xl font-bold" x-text="t('pubs.title')">Publications & Research</h2>
+          <p class="mt-3 text-slate-600 dark:text-slate-300" x-text="t('pubs.subtitle')">Selected work and ongoing projects.</p>
+        </div>
+
+        <div class="mt-10 max-w-3xl mx-auto space-y-4" x-data="accordion()">
+          <details class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4" :open="open === 0" @toggle="set(0,$event)">
+            <summary class="cursor-pointer font-semibold" x-text="t('pubs.item1')">Eurobonds issuance case study (2025)</summary>
+            <div class="mt-2 text-sm text-slate-600 dark:text-slate-300" x-text="t('pubs.item1body')"></div>
+          </details>
+          <details class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4" :open="open === 1" @toggle="set(1,$event)">
+            <summary class="cursor-pointer font-semibold" x-text="t('pubs.item2')">Basel III Endgame: supervisory implications (2024)</summary>
+            <div class="mt-2 text-sm text-slate-600 dark:text-slate-300" x-text="t('pubs.item2body')"></div>
+          </details>
+          <details class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4" :open="open === 2" @toggle="set(2,$event)">
+            <summary class="cursor-pointer font-semibold" x-text="t('pubs.item3')">MF‑BVAR of balance-sheet policies under oil shocks (working)</summary>
+            <div class="mt-2 text-sm text-slate-600 dark:text-slate-300" x-text="t('pubs.item3body')"></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- Blog -->
+    <section id="blog" class="py-20 bg-slate-50 dark:bg-slate-950/50">
+      <div class="container mx-auto px-6">
+        <div class="text-center max-w-xl mx-auto">
+          <h2 class="text-3xl md:text-4xl font-bold" x-text="t('blog.title')">Blog & Insights</h2>
+          <p class="mt-3 text-slate-600 dark:text-slate-300" x-text="t('blog.subtitle')">Short, useful pieces for busy practitioners.</p>
+        </div>
+
+        <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <article class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 flex flex-col">
+            <p class="text-xs text-slate-500">26 Jul 2025</p>
+            <h3 class="mt-2 font-semibold text-lg" x-text="t('blog.post1.title')">The Future of Digital Currencies in Central Banking</h3>
+            <p class="mt-2 text-sm text-slate-600 dark:text-slate-300 flex-grow" x-text="t('blog.post1.body')"></p>
+            <a href="#" class="mt-4 text-primary-700 hover:underline" x-text="t('blog.readMore')">Read more →</a>
+          </article>
+          <article class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 flex flex-col">
+            <p class="text-xs text-slate-500">15 Jul 2025</p>
+            <h3 class="mt-2 font-semibold text-lg" x-text="t('blog.post2.title')">Basel III Endgame: A Supervisor's Perspective</h3>
+            <p class="mt-2 text-sm text-slate-600 dark:text-slate-300 flex-grow" x-text="t('blog.post2.body')"></p>
+            <a href="#" class="mt-4 text-primary-700 hover:underline" x-text="t('blog.readMore')">Read more →</a>
+          </article>
+          <article class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 flex flex-col">
+            <p class="text-xs text-slate-500">1 Jul 2025</p>
+            <h3 class="mt-2 font-semibold text-lg" x-text="t('blog.post3.title')">AI in Risk Management: Beyond the Hype</h3>
+            <p class="mt-2 text-sm text-slate-600 dark:text-slate-300 flex-grow" x-text="t('blog.post3.body')"></p>
+            <a href="#" class="mt-4 text-primary-700 hover:underline" x-text="t('blog.readMore')">Read more →</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="py-20">
+      <div class="container mx-auto px-6">
+        <div class="text-center max-w-xl mx-auto">
+          <h2 class="text-3xl md:text-4xl font-bold" x-text="t('contact.title')">Contact</h2>
+          <p class="mt-3 text-slate-600 dark:text-slate-300" x-text="t('contact.subtitle')">For enquiries about consultancy, training, or research collaboration.</p>
+        </div>
+
+        <div class="mt-10 max-w-xl mx-auto">
+          <form class="space-y-6" x-data="contact()" @submit.prevent="submit">
+            <div>
+              <label for="name" class="block text-sm font-medium" x-text="t('contact.name')">Full name</label>
+              <input id="name" type="text" required class="mt-1 w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-600" />
+            </div>
+            <div>
+              <label for="email" class="block text-sm font-medium" x-text="t('contact.email')">Email address</label>
+              <input id="email" type="email" required class="mt-1 w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-600" />
+            </div>
+            <div>
+              <div class="flex items-center justify-between">
+                <label for="message" class="block text-sm font-medium" x-text="t('contact.msg')">Message</label>
+                <button type="button" @click="suggest()" class="text-xs text-primary-700 hover:underline" x-text="t('contact.suggest')">Suggest message</button>
+              </div>
+              <textarea id="message" rows="4" required class="mt-1 w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-600" x-model="message"></textarea>
+            </div>
+            <div class="flex items-center gap-3">
+              <input id="consent" type="checkbox" required class="rounded border-slate-300 dark:border-slate-700" />
+              <label for="consent" class="text-sm text-slate-600 dark:text-slate-300" x-text="t('contact.consent')">I agree to the processing ...</label>
+            </div>
+            <button type="submit" class="w-full inline-flex justify-center py-3 px-4 rounded-md bg-primary-600 text-white hover:bg-primary-700 shadow-soft" x-text="t('contact.send')">Send message</button>
+            <p x-show="notice" x-text="notice" class="text-sm text-green-600" role="status"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-slate-900 text-slate-300 py-12">
+    <div class="container mx-auto px-6 text-center">
+      <h3 class="text-xl font-bold text-white" x-text="t('name')">Dheyaa Alkhafaji</h3>
+      <p class="mt-2 text-slate-400" x-text="t('footer.role')">PhD Candidate · Central Banking &amp; Banking Supervision</p>
+      <div class="flex justify-center gap-6 mt-6">
+        <a href="#" class="hover:text-white" aria-label="LinkedIn">LinkedIn</a>
+        <a href="#" class="hover:text-white" aria-label="Google Scholar">Scholar</a>
+        <a href="#" class="hover:text-white" aria-label="University Profile" x-text="t('footer.university')">University</a>
+      </div>
+      <p class="mt-8 text-slate-500">© <span x-text="new Date().getFullYear()"></span> <span x-text="t('name')"></span>. <span x-text="t('footer.rights')">All rights reserved.</span></p>
+    </div>
+  </footer>
+
+  <!-- JSON-LD (static in EN by default) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Dheyaa Alkhafaji",
+    "jobTitle": "Financial Regulation & Banking Supervision Expert",
+    "affiliation": {"@type":"CollegeOrUniversity","name":"Bournemouth University"},
+    "sameAs": ["https://www.linkedin.com/", "https://scholar.google.com/"]
+  }
+  </script>
+
+  <!-- App logic with translations -->
+  <script>
+    const MESSAGES = {
+      en: {
+        skip: "Skip to content",
+        name: "Dheyaa Alkhafaji",
+        tagline: "Financial Regulation & Supervision",
+        toggleTheme: "Toggle dark mode",
+        openMenu: "Open menu",
+        nav: { home: "Home", about: "About", services: "Services", publications: "Publications", blog: "Blog", contact: "Contact" },
+        hero: {
+          title: "Expertise in <span class='text-primary-600'>Central Banking</span> &amp; Financial Regulation",
+          subtitle: "PhD Candidate at Bournemouth University with over a decade in banking supervision. I bridge academic rigour with practical policy design to help institutions make resilient decisions.",
+          cta: "Get in touch",
+          secondary: "View services",
+          stat1: { value: "10+", suffix: "y", label: "Supervision experience" },
+          stat2: { value: "GCC & Iraq", label: "Regional focus" },
+          stat3: { value: "PhD", label: "Monetary policy" },
+          imageAlt: "Portrait of Dheyaa Alkhafaji",
+          note: "Currently researching central bank balance-sheet policy under oil shocks and fiscal dominance."
+        },
+        trust: { title: "Worked with / presented at" },
+        about: {
+          title: "About me",
+          body: "I am a PhD candidate at Bournemouth University with over 10 years in central banking and banking supervision. My research connects monetary policy, balance-sheet tools, and the macro-financial transmission in oil-dependent economies.",
+          focus: "Focus areas",
+          focus1: "Banking supervision & Basel standards",
+          focus2: "Central bank balance sheets (MF-BVAR)",
+          focus3: "Oil-price shocks & fiscal-monetary interplay",
+          methods: "Methods",
+          methods1: "Mixed-frequency BVAR & sign restrictions",
+          methods2: "Panel data (Stata/R/MATLAB)",
+          methods3: "Policy case studies & scenario analysis",
+          current: "Currently",
+          currentBody: "Advising on Basel III implementation and conducting research on exit strategies from unconventional monetary policies."
+        },
+        services: {
+          title: "Consultancy & Training",
+          subtitle: "Practical, evidence-based support for regulators, banks, and ministries.",
+          card1: { title: "Expert Consultancy", badge: "Advisory", body: "Strategic advice on regulation, risk management, and monetary policy—tailored to your institutional context." },
+          card2: { title: "Customized Training", badge: "Workshops", body: "Design and delivery of programs on banking supervision, compliance, and macroprudential policy." },
+          card3: { title: "Research Collaboration", badge: "Academic", body: "Partnering on projects in finance and economics; data pipelines, replication, and policy briefs." },
+          cta: "Request a proposal"
+        },
+        pubs: {
+          title: "Publications & Research",
+          subtitle: "Selected work and ongoing projects.",
+          item1: "Eurobonds issuance case study (2025)",
+          item1body: "Proceedings of the International Conference on Finance — group discussion methodology for sovereign green infrastructure financing.",
+          item2: "Basel III Endgame: supervisory implications (2024)",
+          item2body: "Journal of Financial Regulation — policy note on capital floors and output calibration.",
+          item3: "MF‑BVAR of balance-sheet policies under oil shocks (working)",
+          item3body: "Working paper — mixed-frequency Bayesian VAR for GCC with sign restrictions; code in MATLAB/R."
+        },
+        blog: {
+          title: "Blog & Insights",
+          subtitle: "Short, useful pieces for busy practitioners.",
+          post1: { title: "The Future of Digital Currencies in Central Banking", body: "Challenges and opportunities of CBDCs and their implications for monetary policy." },
+          post2: { title: "Basel III Endgame: A Supervisor's Perspective", body: "Final implementation considerations and what they mean for bank resilience." },
+          post3: { title: "AI in Risk Management: Beyond the Hype", body: "Practical applications of ML in identifying and mitigating risks." },
+          readMore: "Read more →"
+        },
+        contact: {
+          title: "Contact",
+          subtitle: "For enquiries about consultancy, training, or research collaboration.",
+          name: "Full name",
+          email: "Email address",
+          msg: "Message",
+          suggest: "Suggest message",
+          consent: "I agree to the processing of my data for the purpose of this enquiry.",
+          send: "Send message",
+          thanks: "Thanks! Your message has been queued. I'll reply within 2 business days."
+        },
+        footer: { role: "PhD Candidate · Central Banking & Banking Supervision", university: "University", rights: "All rights reserved." }
+      },
+      ar: {
+        skip: "الانتقال إلى المحتوى",
+        name: "ضياء الخفاجي",
+        tagline: "التنظيم المالي والرقابة المصرفية",
+        toggleTheme: "تبديل النمط الليلي",
+        openMenu: "فتح القائمة",
+        nav: { home: "الرئيسية", about: "نبذة", services: "الخدمات", publications: "المنشورات", blog: "المدونة", contact: "تواصل" },
+        hero: {
+          title: "خبرة في <span class='text-primary-600'>البنوك المركزية</span> والتنظيم المالي",
+          subtitle: "مرشح دكتوراه في جامعة بورنموث ولدي أكثر من عشر سنوات في الرقابة المصرفية. أوصل بين الصرامة الأكاديمية وتصميم السياسات العملية لمساعدة المؤسسات على اتخاذ قرارات متينة.",
+          cta: "تواصل معي",
+          secondary: "استعراض الخدمات",
+          stat1: { value: "10+", suffix: "س", label: "خبرة رقابية" },
+          stat2: { value: "دول مجلس التعاون والعراق", label: "التركيز الإقليمي" },
+          stat3: { value: "دكتوراه", label: "السياسة النقدية" },
+          imageAlt: "صورة ضياء الخفاجي",
+          note: "أبحث حالياً في سياسات ميزانيات البنوك المركزية تحت صدمات أسعار النفط وهيمنة المالية العامة."
+        },
+        trust: { title: "عملتُ مع / قدمتُ لدى" },
+        about: {
+          title: "نبذة عني",
+          body: "أنا مرشح دكتوراه في جامعة بورنموث ولدي أكثر من 10 سنوات في العمل بالبنوك المركزية والرقابة المصرفية. يربط بحثي بين السياسة النقدية وأدوات الميزانية العمومية وقنوات الانتقال في الاقتصادات المعتمدة على النفط.",
+          focus: "مجالات التركيز",
+          focus1: "الرقابة المصرفية ومعايير بازل",
+          focus2: "ميزانيات البنوك المركزية (MF-BVAR)",
+          focus3: "صدمات أسعار النفط وتفاعل السياسة المالية والنقدية",
+          methods: "المنهجيات",
+          methods1: "نماذج BVAR بترددات مختلطة وقيود الإشارة",
+          methods2: "بيانات لوحية (Stata/R/MATLAB)",
+          methods3: "دراسات حالة وسياسات وتحليل السيناريوهات",
+          current: "حالياً",
+          currentBody: "تقديم المشورة لتنفيذ بازل 3 وإجراء أبحاث حول استراتيجيات الخروج من السياسات النقدية غير التقليدية."
+        },
+        services: {
+          title: "الاستشارات والتدريب",
+          subtitle: "دعم عملي قائم على الأدلة للجهات الرقابية والبنوك والوزارات.",
+          card1: { title: "استشارات متخصصة", badge: "استشارات", body: "نصائح استراتيجية في التنظيم وإدارة المخاطر والسياسة النقدية—مصممة وفق سياق مؤسستك." },
+          card2: { title: "تدريب مخصص", badge: "ورش عمل", body: "تصميم وتنفيذ برامج في الرقابة المصرفية والامتثال والسياسة الاحترازية الكلية." },
+          card3: { title: "تعاون بحثي", badge: "أكاديمي", body: "شراكات في مشاريع التمويل والاقتصاد؛ خطوط بيانات، تكرار نتائج، وموجزات سياسات." },
+          cta: "اطلب عرضاً"
+        },
+        pubs: {
+          title: "المنشورات والبحوث",
+          subtitle: "أعمال مختارة ومشاريع جارية.",
+          item1: "دراسة حالة لإصدار اليوروبوند (2025)",
+          item1body: "وقائع المؤتمر الدولي للمالية — منهجية نقاش جماعي لتمويل البنية التحتية الخضراء السيادية.",
+          item2: "نهاية بازل 3: آثار رقابية (2024)",
+          item2body: "مجلة التنظيم المالي — مذكرة سياسات حول حدود رأس المال ومعايرة المخرجات.",
+          item3: "BVAR بترددات مختلطة لسياسات الميزانية تحت صدمات النفط (عمل جارٍ)",
+          item3body: "ورقة عمل — BVAR لدول المجلس مع قيود الإشارة؛ كود في MATLAB/R."
+        },
+        blog: {
+          title: "المدونة والرؤى",
+          subtitle: "مواد قصيرة ومفيدة للمهنيين المنشغلين.",
+          post1: { title: "مستقبل العملات الرقمية في البنوك المركزية", body: "تحديات وفرص العملات الرقمية للبنوك المركزية وانعكاساتها على السياسة النقدية." },
+          post2: { title: "نهاية بازل 3: منظور رقابي", body: "اعتبارات التطبيق النهائي وما تعنيه لمرونة البنوك." },
+          post3: { title: "الذكاء الاصطناعي في إدارة المخاطر: ما بعد الضجيج", body: "تطبيقات عملية للتعلم الآلي في تحديد المخاطر والتخفيف منها." },
+          readMore: "اقرأ المزيد →"
+        },
+        contact: {
+          title: "تواصل",
+          subtitle: "للاستفسار عن الاستشارات أو التدريب أو التعاون البحثي.",
+          name: "الاسم الكامل",
+          email: "البريد الإلكتروني",
+          msg: "الرسالة",
+          suggest: "اقترح رسالة",
+          consent: "أوافق على معالجة بياناتي لغرض هذا الاستفسار.",
+          send: "إرسال",
+          thanks: "شكراً! تم استلام رسالتك وسأرد خلال يومي عمل."
+        },
+        footer: { role: "مرشح دكتوراه · البنوك المركزية والرقابة المصرفية", university: "الجامعة", rights: "جميع الحقوق محفوظة." }
+      }
+    };
+
+    function site(){
+      const savedLang = localStorage.getItem('lang') || (navigator.language && navigator.language.startsWith('ar') ? 'ar' : 'en');
+      return {
+        theme: localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'),
+        lang: savedLang,
+        t(path){
+          const [first, ...rest] = path.split('.');
+          let cur = MESSAGES[this.lang][first];
+          for(const k of rest){ cur = cur?.[k]; }
+          return cur ?? path;
+        },
+        setLang(l){ this.lang = l; localStorage.setItem('lang', l); document.documentElement.setAttribute('lang', l); document.documentElement.setAttribute('dir', l==='ar'?'rtl':'ltr'); },
+        toggleTheme(){ this.theme = this.theme==='dark' ? 'light' : 'dark'; localStorage.setItem('theme', this.theme); }
+      }
+    }
+    function nav(){
+      return {
+        open: false,
+        active: 'home',
+        linkClass(id){ return this.active===id ? 'text-primary-700' : 'text-slate-700 dark:text-slate-300 hover:text-primary-700'; },
+      }
+    }
+    function accordion(){
+      return { open: 0, set(i, e){ if(e.target.open){ this.open = i } } }
+    }
+    function contact(){
+      return {
+        message: '', notice: '',
+        async suggest(){
+          // Suggest based on language
+          const en = "Hello Dheyaa, I'd like to discuss a short engagement on Basel III implementation and supervisory stress testing. Could we schedule a call next week?";
+          const ar = "مرحباً ضياء، أود مناقشة تعاون قصير حول تنفيذ بازل 3 واختبارات الضغط الرقابية. هل يمكننا تحديد مكالمة الأسبوع المقبل؟";
+          this.message = (localStorage.getItem('lang')||'en')==='ar' ? ar : en;
+        },
+        async submit(){
+          // Replace with your endpoint (Netlify Forms, Formspree, serverless function, etc.)
+          const lang = localStorage.getItem('lang')||'en';
+          this.notice = lang==='ar' ? MESSAGES.ar.contact.thanks : MESSAGES.en.contact.thanks;
+        }
+      }
+    }
+  </script>
+</body>
+</html>
